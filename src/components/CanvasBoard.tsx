@@ -4,6 +4,7 @@ import { IObjectBody, clearBoard, drawObject, generateRandomPosition, hasSnakeCo
 import { IGlobalState } from "../store/reducers"
 import { MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP, RESET_SCORE, increaseScore, increaseSnake, makeMove, resetGame, resetScore, stopGame } from "../store/actions"
 import Instructions from "./Instructions"
+import MobileButtons from "./MobileButtons"
 
 interface ICanvasBoard {
     height: number,
@@ -16,7 +17,7 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
    
     
     const {score,snake} = useSelector((state:IGlobalState)=>state)
-    
+
     const disallowedDirection = useSelector((state: IGlobalState) => {
         return state.disallowedDirection;
     })
@@ -178,6 +179,7 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
 
             </canvas>
             <Instructions resetBoard={resetBoard} />
+            { window.innerWidth <= 768 && <MobileButtons handleMobileButtons = {handleKeyEvents} />}
         </>
     )
 }

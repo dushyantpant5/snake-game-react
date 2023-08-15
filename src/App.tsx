@@ -4,6 +4,7 @@ import './App.css';
 import CanvasBoard from "./components/CanvasBoard";
 import store from './store/index'
 import ScoreCard from "./components/ScoreCard";
+import MobileButtons from "./components/MobileButtons";
 
 function App() {
   return (
