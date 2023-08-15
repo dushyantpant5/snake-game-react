@@ -15,9 +15,8 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
     const dispatch = useDispatch();
    
     
-    const snake = useSelector((state: IGlobalState) => {
-        return state.snake;
-    });
+    const {score,snake} = useSelector((state:IGlobalState)=>state)
+    
     const disallowedDirection = useSelector((state: IGlobalState) => {
         return state.disallowedDirection;
     })
@@ -98,6 +97,8 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
 
     },[context, dispatch, handleKeyEvents, height, snake, width])
 
+  
+
     useEffect(()=>{
       
         if(isConsumed)
@@ -106,6 +107,8 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
             setIsConsumed(false)
             dispatch(increaseSnake())
             dispatch(increaseScore())
+            
+            
         }
        
     },[isConsumed,pos])
@@ -127,6 +130,26 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
             setGameEnded(true)
             dispatch(stopGame())
             window.removeEventListener("keydown", handleKeyEvents);
+        }
+
+        //Adding High-Score
+
+        if(localStorage.getItem('high-score')===null)
+        {
+            localStorage.setItem('high-score','0')
+        }
+        else
+        {
+          
+            const highScore = localStorage.getItem('high-score')
+            if(highScore)
+            {
+                if(score>Number(highScore))
+                {
+                    const stringScore = score.toString()
+                    localStorage.setItem('high-score',stringScore)
+                }
+            }
         }
 
     }, [context, pos, snake])
