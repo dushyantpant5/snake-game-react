@@ -21,6 +21,7 @@ export const RESET_GAME = "RESET_GAME"
 
 export const RESET_SCORE = "RESET_SCORE"
 
+export const SET_USER = "SET_USER"
 
 export const makeMove = (dx: number, dy: number, move: string) => ({
     type: move,
@@ -50,4 +51,9 @@ export const resetGame = ()=>({
 
 export const resetScore = ()=>({
     type:RESET_SCORE
+})
+
+export const setUser = (user:string)=>({
+    type:SET_USER,
+    payload:user
 })

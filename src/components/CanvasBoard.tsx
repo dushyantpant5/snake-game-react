@@ -5,6 +5,9 @@ import { IGlobalState } from "../store/reducers"
 import { MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP, RESET_SCORE, increaseScore, increaseSnake, makeMove, resetGame, resetScore, stopGame } from "../store/actions"
 import Instructions from "./Instructions"
 import MobileButtons from "./MobileButtons"
+import { addOrUpdateUser, getTop3 } from "../firebase/functions"
+import LadderBoard from "./LadderBoard"
+
 
 interface ICanvasBoard {
     height: number,
@@ -29,6 +32,9 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
 
+    //Firebase LadderBoard
+
+    const [ladderBoard,setLadderBoard] = useState<any>(null)
 
     const moveSnake = useCallback(
         (dx = 0, dy = 0, ds: string) => {
@@ -127,7 +133,13 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
             setPos(foodNewPos)
         }
         if(snake[0].x >= width || snake[0].x<0 || snake[0].y >=height || snake[0].y<0  || hasSnakeCollidedWithItself(snake,snake[0]) )
-        {
+        {   
+            //Firebase Function
+
+            const user = localStorage.getItem('snake-game-user')?.toUpperCase();
+            const score = localStorage.getItem('high-score')
+            addOrUpdateUser(user,score)
+
             setGameEnded(true)
             dispatch(stopGame())
             window.removeEventListener("keydown", handleKeyEvents);
@@ -152,6 +164,7 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
                 }
             }
         }
+
 
     }, [context, pos, snake])
 
@@ -178,7 +191,10 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
             >
 
             </canvas>
+            <div style={{display:"flex", alignItems:"start" , gap:"4rem" }} >
             <Instructions resetBoard={resetBoard} />
+            <LadderBoard />
+            </div>
             { window.innerWidth <= 768 && <MobileButtons handleMobileButtons = {handleKeyEvents} />}
         </>
     )
